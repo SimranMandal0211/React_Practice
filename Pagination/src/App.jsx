@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App(){
   const fruits = [
@@ -17,10 +17,21 @@ function App(){
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(fruits.length / pageSize);
 
+   useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPage((prev) =>
+        prev === totalPages ? 1 : prev + 1
+      );
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [totalPages]);
+
+  // Current page Items
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-
   const currentItem = fruits.slice(startIndex, endIndex);
+
 
   return(
     <>
@@ -47,6 +58,17 @@ function App(){
       >
         Next
       </button>
+
+{/* Page Number */}
+      <div>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button key={index + 1}
+            onClick={() => setCurrentPage(index + 1)}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </>
   )
 }
