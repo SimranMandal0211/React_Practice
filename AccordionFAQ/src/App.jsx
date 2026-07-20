@@ -1,89 +1,33 @@
-import faqData from "./faqData";
 import { useState } from "react";
+import faqData from './faqData';
 
-function App() {
-  const [openIds, setOpenIds] = useState([]);
+function App(){
 
-  function handleOpeningQA(id) {
-    if (openIds.includes(id)) {
-      setOpenIds((prev) => prev.filter((item) => item !== id));
-    } else {
-      setOpenIds((prev) => [...prev, id]);
-    }
+  const [isOpen, setIsOpen] = useState(null);
+
+  function handleToggle(id){
+    setIsOpen((prev) => prev === id ? null : id)
   }
 
-  return (
+  return(
     <>
-      <h1>Accordion</h1>
+      <h1>Accordian</h1>
 
-      <ul
-        style={{
-          listStyle: "none",
-          padding: 0,
-          maxWidth: "600px",
-          margin: "30px auto",
-        }}
-      >
-        {faqData.map((item) => {
-          const isOpen = openIds.includes(item.id);
+      <ul>
+        {faqData.map((data) => (
+          <li key={data.id}>
+            <button onClick={() => handleToggle(data.id)}>
+              {data.question}
+            </button>
 
-          return (
-            <li
-              key={item.id}
-              style={{
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-                marginBottom: "12px",
-                overflow: "hidden",
-              }}
-            >
-              <div
-                onClick={() => handleOpeningQA(item.id)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  padding: "15px",
-                  cursor: "pointer",
-                  fontWeight: "bold",
-                  backgroundColor: "#f5f5f5",
-                }}
-              >
-                <span
-                  style={{
-                    width: "20px",
-                    textAlign: "center",
-                    fontSize: "20px",
-                  }}
-                >
-                  {isOpen ? "-" : "+"}
-                </span>
-
-                <span>{item.question}</span>
-              </div>
-
-              <div
-                style={{
-                  maxHeight: isOpen ? "200px" : "0px",
-                  overflow: "hidden",
-                  transition: "max-height 0.4s ease",
-                  borderTop: isOpen ? "1px solid #ddd" : "none",
-                }}
-              >
-                <div
-                  style={{
-                    padding: "15px",
-                  }}
-                >
-                  {item.answer}
-                </div>
-              </div>
-            </li>
-          );
-        })}
+            {isOpen === data.id && (
+              <p>{data.answer}</p>
+            )}
+          </li>
+        ))}
       </ul>
     </>
-  );
+  )
 }
 
 export default App;
